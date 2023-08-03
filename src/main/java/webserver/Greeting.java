@@ -8,12 +8,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class Greeting {
+    private final static String defaultUsername = "человек";
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String greeting(
-            @RequestParam(value="name", required=false, defaultValue="человек") String name,
+    String greeting(
+            @RequestParam(value= "username", required=false, defaultValue=defaultUsername) String username,
             Model model) {
-        model.addAttribute("name", name);
-        return "greeting";
+        model.addAttribute("username", username);
+        return "index";
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    String greetingFrom(
+            @RequestParam(value = "username", required=false, defaultValue=defaultUsername) String username,
+            Model model) {
+        if (!username.isBlank())
+            model.addAttribute("username", !username.isBlank() ? username : defaultUsername);
+        return "index";
     }
 }
