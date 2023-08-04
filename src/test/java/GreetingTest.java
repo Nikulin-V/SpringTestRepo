@@ -14,7 +14,7 @@ public class GreetingTest {
     @BeforeAll
     static void setup() {
         WebServer.main(new String[0]);
-        System.out.println("@BeforeAll executed");
+        System.out.println("Server started");
     }
 
     @Test
