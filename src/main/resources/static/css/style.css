@@ -4,11 +4,14 @@ body {
 
 .center-div {
     width: fit-content;
-    margin-top: 25%;
     border: 1px solid aqua;
     border-radius: 15px;
 }
 
 #greeting {
     font-size: 24px
+}
+
+.form-title {
+    margin-top: 15%;
 }

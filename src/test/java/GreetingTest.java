@@ -36,8 +36,8 @@ public class GreetingTest {
     void testFilledUsername() throws IOException, InterruptedException {
         HttpClient client =  HttpClient.newHttpClient();
 
-        Map<Object, Object> formData = new HashMap<>();
-        formData.put("username", "Имя пользователя 1");
+        Map<String, Object> formData = new HashMap<>();
+        formData.put("username", "Имя пользователя " + Tests.randomInt());
         HttpRequest request = HttpRequest.newBuilder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .uri(Tests.getURI())

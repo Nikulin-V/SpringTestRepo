@@ -34,9 +34,8 @@ public class SQLManager {
     public void createSettingsTable() {
         jdbcTemplate.execute("""
             CREATE TABLE IF NOT EXISTS settings(
-                id VARCHAR(128) PRIMARY KEY,
-                name TEXT(128),
-                value VARCHAR(128),
+                name TEXT(128) NOT NULL PRIMARY KEY,
+                value VARCHAR(128) NOT NULL,
                 description TEXT(128)
             )
             """);
@@ -45,9 +44,9 @@ public class SQLManager {
     public void createPostsTable() {
         jdbcTemplate.execute("""
             CREATE TABLE IF NOT EXISTS posts(
-                id VARCHAR(128) PRIMARY KEY,
-                title TEXT(128),
-                text TEXT(4096),
+                id VARCHAR(128) NOT NULL PRIMARY KEY,
+                title TEXT(128) NOT NULL,
+                text TEXT(4096) NOT NULL,
                 created_at VARCHAR(32)
             )
             """);
@@ -56,10 +55,10 @@ public class SQLManager {
     public void createImagesTable() {
         jdbcTemplate.execute("""
             CREATE TABLE IF NOT EXISTS images(
-                id VARCHAR(128) PRIMARY KEY,
-                name TEXT(128),
-                image BLOB(16777216),
-                post_id VARCHAR(128),
+                id VARCHAR(128) NOT NULL PRIMARY KEY,
+                name TEXT(128) NOT NULL,
+                image BLOB(16777216) NOT NULL,
+                post_id VARCHAR(128) NOT NULL,
                 FOREIGN KEY (post_id) REFERENCES posts(id)
             )
             """);
