@@ -1,9 +1,7 @@
 package webserver.views;
 
 import com.google.common.collect.Maps;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import webserver.SQLManager;
 import webserver.Templates;
 import webserver.models.Post;
@@ -13,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -45,5 +44,25 @@ public class News {
         Map<String, Object> context = Maps.newHashMap();
         context.put("posts", posts);
         return Templates.render(templateName, context);
+    }
+
+    @PostMapping
+    String newsPost(@RequestParam HashMap<String, String> postFields) {
+        Post post = new Post();
+        for (String postField: postFields.keySet()) {
+            String value = postFields.get(postField);
+            switch (postField) {
+                case "title" -> post.setTitle(value);
+                case "text" -> post.setText(value);
+            }
+        }
+        Post.create(post);
+        return news();
+    }
+
+    @DeleteMapping
+    String deletePost(@RequestParam String postId) {
+        Post.delete(postId);
+        return news();
     }
 }

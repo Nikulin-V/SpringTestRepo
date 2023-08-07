@@ -20,7 +20,7 @@ public class Greeting {
     }
 
     @PostMapping
-    String greetingFrom(@RequestParam(value = "username", required=false, defaultValue=defaultUsername) String username) {
+    String greetingForm(@RequestParam(value = "username", required=false, defaultValue=defaultUsername) String username) {
         Map<String, Object> context = Maps.newHashMap();
         context.put("username", !username.isBlank() ? username : defaultUsername);
         return Templates.render(templateName, context);

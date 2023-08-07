@@ -7,13 +7,14 @@ import org.hibernate.Transaction;
 import org.hibernate.annotations.CreationTimestamp;
 import webserver.SQLManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "posts")
-public class Post {
+public class Post implements Serializable {
     @Id
     @Column(name = "id", columnDefinition = "VARCHAR(128)")
     private String id;
@@ -24,8 +25,10 @@ public class Post {
     @CreationTimestamp
     private Date createdAt;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
+
+    public Post() {}
 
     public void addImage(Image image) {
         images.add(image);
