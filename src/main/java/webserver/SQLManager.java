@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.text.SimpleDateFormat;
 
 @Component
 public class SQLManager {
     public static final SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
     public static final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource());
+    public static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     SQLManager() {
         createSettingsTable();

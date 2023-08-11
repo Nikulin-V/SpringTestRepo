@@ -10,9 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/news")
@@ -34,35 +32,45 @@ public class News {
                 post.setId(rs.getString(++i));
                 post.setTitle(rs.getString(++i));
                 post.setText(rs.getString(++i));
-                post.setCreatedAt(rs.getDate(++i));
+                post.setCreatedAt(rs.getString(++i));
                 posts.add(post);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         Map<String, Object> context = Maps.newHashMap();
         context.put("posts", posts);
         return Templates.render(templateName, context);
     }
 
     @PostMapping
-    String newsPost(@RequestParam HashMap<String, String> postFields) {
+    String newsPost(@RequestBody HashMap<String, String> json) {
+        String title = json.get("title");
+        String text = json.get("text");
+        return Post.create(title, text);
+    }
+
+    @PutMapping
+    String newsPut(@RequestBody HashMap<String, String> json) {
+        String id = json.get("id");
+        String title = json.get("title");
+        String text = json.get("text");
+
         Post post = new Post();
-        for (String postField: postFields.keySet()) {
-            String value = postFields.get(postField);
-            switch (postField) {
-                case "title" -> post.setTitle(value);
-                case "text" -> post.setText(value);
-            }
-        }
-        Post.create(post);
-        return news();
+        post.setId(id);
+        post.setTitle(title);
+        post.setText(text);
+        Post.update(post);
+        return "success";
     }
 
     @DeleteMapping
-    String deletePost(@RequestParam String postId) {
-        Post.delete(postId);
-        return news();
+    String newsDelete(@RequestBody HashMap<String, String> json) {
+        String id = json.get("id");
+
+        if (Post.read(id) != null) {
+            Post.delete(id);
+            return "success";
+        } else return "id not found";
     }
 }
