@@ -3,15 +3,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import webserver.SQLManager;
 import webserver.WebServer;
-import webserver.models.Setting;
+import webserver.models.Post;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.UUID;
 
-public class SettingsTest {
+public class PostsTest {
     @BeforeAll
     static void setup() {
         WebServer.main(new String[0]);
@@ -19,23 +18,16 @@ public class SettingsTest {
     }
 
     @Test
-    void createSetting() {
-        String id = UUID.randomUUID().toString();
-        String name = "Test name "  + Tests.randomInt();
-        String value = String.valueOf(Tests.randomInt());
-        String description = "Test description " + Tests.randomInt();
-
-        Setting setting = new Setting();
-        setting.setName(name);
-        setting.setValue(value);
-        setting.setDescription(description);
-        Setting.create(setting);
+    void createPost() {
+        String title = "Test title "  + Tests.randomInt();
+        String text = "Test text " + Tests.randomInt();
+        Post.create(title, text);
 
         String query = String.format("""
-                SELECT * FROM settings
-                WHERE id = '%s' AND name = '%s' AND value = '%s' AND description = '%s'
+                SELECT * FROM posts
+                WHERE title = '%s' AND text = '%s'
                 """,
-                id, name, value, description);
+                title, text);
 
         try (Connection connection = SQLManager.dataSource().getConnection()) {
             Statement statement = connection.createStatement();
@@ -43,7 +35,7 @@ public class SettingsTest {
             try {
                 Assertions.assertNotNull(resultSet);
             } catch (AssertionError e) {
-                Assertions.fail("Не создаётся Setting с указанными параметрами");
+                Assertions.fail("Не создаётся Post с указанными параметрами");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

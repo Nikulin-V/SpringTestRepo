@@ -1,17 +1,17 @@
 package webserver.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import org.hibernate.PersistentObjectException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import webserver.SQLManager;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "settings")
 public class Setting {
-    @Column(name = "id", columnDefinition = "VARCHAR(128)")
-    private UUID id;
     @Column
     private String name;
     @Column(name = "value", columnDefinition = "VARCHAR(128)")
@@ -20,15 +20,6 @@ public class Setting {
     private String description;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -56,21 +47,26 @@ public class Setting {
     public static void create(Setting setting) {
         Session session = SQLManager.sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.persist(setting);
+        try {
+            session.persist(setting);
+        } catch (PersistentObjectException e) {
+            //noinspection deprecation
+            session.save(setting);
+        }
         transaction.commit();
         session.close();
     }
 
-    public static Setting read(UUID id) {
+    public static Setting read(String name) {
         Session session = SQLManager.sessionFactory.openSession();
-        Setting setting = session.get(Setting.class, id);
+        Setting setting = session.get(Setting.class, name);
         session.close();
         return setting;
     }
 
     public static void update(Setting updatedSetting) {
         Session session = SQLManager.sessionFactory.openSession();
-        Setting setting = read(updatedSetting.getId());
+        Setting setting = read(updatedSetting.getName());
         setting.setName(updatedSetting.getName());
         setting.setValue(updatedSetting.getValue());
         setting.setDescription(updatedSetting.getDescription());
@@ -80,10 +76,10 @@ public class Setting {
         session.close();
     }
 
-    public static void delete(UUID id) {
+    public static void delete(String name) {
         Session session = SQLManager.sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.remove(read(id));
+        session.remove(read(name));
         transaction.commit();
         session.close();
     }

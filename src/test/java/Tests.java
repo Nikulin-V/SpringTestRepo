@@ -10,7 +10,7 @@ public class Tests {
     static final String host = "127.0.0.1";
     static final Integer port = 8080;
 
-    public static HttpRequest.BodyPublisher ofForm(Map<Object, Object> data) {
+    public static HttpRequest.BodyPublisher ofForm(Map<String, Object> data) {
         StringBuilder body = new StringBuilder();
         for (Object dataKey : data.keySet()) {
             if (body.length() > 0) {
@@ -50,5 +50,9 @@ public class Tests {
     static String getURL() {
         //noinspection ConstantConditions
         return port != null ? protocol + "://" + host + ":" + port + "/" :  protocol + "://" + host + "/";
+    }
+
+    static int randomInt() {
+        return (int) (Math.random() * 10000000);
     }
 }

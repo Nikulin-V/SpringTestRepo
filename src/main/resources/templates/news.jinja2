@@ -1,0 +1,62 @@
+{% extends "base.jinja2" %}
+
+{% block title %}
+    Настройки
+{% endblock %}
+
+{% block content %}
+    <div class="w-100 d-inline-flex mt-5 justify-content-center">
+        <h3 class="h3 text-info text-center">Новости</h3>
+        <button class="btn btn-info btn-create text-white" style="position: absolute; right: 5%">Создать пост</button>
+    </div>
+
+    <hr class="w-75 mx-auto">
+    <div class="center-div border-0 p-3 mt-3 mx-auto text-center w-75" id="news">
+        {% autoescape %}
+        {% if posts %}
+            {% for post in posts %}
+                <div class="card border-info mb-3" id="{{ post.id }}">
+                    <div class="card-body">
+                        <h5 class="card-title" id="{{ post.id }}-title">{{ post.title }}</h5>
+                        <hr class="w-50 mx-auto">
+                        <p class="card-text" id="{{ post.id }}-text">{{ post.text }}</p>
+                        <div><p class="small text-secondary">{{ post.createdAt }}</p></div>
+                        <button class="text-info btn btn-outline-info btn-edit">
+                            Изменить
+                        </button>
+                        <button class="text-danger btn btn-outline-danger btn-delete">❌</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="h5 text-info text-center no-news">Новостей нет</p>
+        {% endif %}
+        {% endautoescape %}
+    </div>
+    <div class="modal fade" id="postForm" tabindex="-1" role="dialog" aria-hidden="true" data-toggle="modal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="postFormTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="title" class="col-form-label">Заголовок:</label>
+                            <input type="text" class="form-control" id="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="text" class="col-form-label">Текст:</label>
+                            <textarea class="form-control" id="text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" id="postFormButton"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/news.js" type="text/javascript"></script>
+{% endblock %}

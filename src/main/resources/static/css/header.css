@@ -1,0 +1,11 @@
+.nav-item {
+    margin: 5px 10px;
+}
+
+.nav-link {
+    color: whitesmoke !important;
+}
+
+.nav-link:hover {
+    font-weight: bold;
+}
