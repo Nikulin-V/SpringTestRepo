@@ -8,17 +8,21 @@
     <h3 class="h3 text-info text-center form-title">Настройки</h3>
     <div class="center-div p-3 mt-3 mx-auto text-center">
         <form method="post" class="form-control border-0">
-            {% for setting in settings %}
-                <div>
-                    <label>
-                        {{ setting.name }}
-                        <input class="form-text ms-2" type="text" name="{{ setting.name }}" value="{{ setting.value }}">
-                    </label>
-                    <p class="small text-secondary">{{ setting.description }}</p>
-                </div>
-            {% endfor %}
-            <br>
-            <button class="btn btn-info text-white" type="submit">Сохранить</button>
+            {% if settings %}
+                {% for setting in settings %}
+                    <div>
+                        <label>
+                            {{ setting.name }}
+                            <input class="form-text ms-2" type="text" name="{{ setting.name }}" value="{{ setting.value }}">
+                        </label>
+                        <p class="small text-secondary">{{ setting.description }}</p>
+                    </div>
+                {% endfor %}
+                <br>
+                <button class="btn btn-info text-white" type="submit">Сохранить</button>
+            {% else %}
+                <p class="h5 text-info text-center no-news">Настроек нет</p>
+            {% endif %}
         </form>
     </div>
 {% endblock %}

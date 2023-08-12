@@ -49,8 +49,7 @@ public class Settings {
     String settingsUpdate(@RequestParam HashMap<String, String> settings) {
         for (String settingName: settings.keySet()) {
             String settingValue = settings.get(settingName);
-            Setting setting = new Setting();
-            setting.setName(settingName);
+            Setting setting = Setting.read(settingName);
             setting.setValue(settingValue);
             Setting.update(setting);
         }
