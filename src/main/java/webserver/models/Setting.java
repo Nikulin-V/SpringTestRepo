@@ -44,6 +44,14 @@ public class Setting {
         this.description = description;
     }
 
+    public static void create(String name, String value, String description) {
+        Setting setting = new Setting();
+        setting.setName(name);
+        setting.setValue(value);
+        setting.setDescription(description);
+        create(setting);
+    }
+
     public static void create(Setting setting) {
         Session session = SQLManager.sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();

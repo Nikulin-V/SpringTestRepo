@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import webserver.SQLManager;
 import webserver.Templates;
 import webserver.models.Post;
+import webserver.models.Setting;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -38,8 +39,18 @@ public class News {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        String postTitleSize = "24px";
+        if (Setting.read("Размер заголовка поста") != null)
+            postTitleSize = Setting.read("Размер заголовка поста").getValue() + "px";
+        String postTextSize = "14px";
+        if (Setting.read("Размер текста поста") != null)
+            postTextSize = Setting.read("Размер текста поста").getValue() + "px";
+
         Map<String, Object> context = Maps.newHashMap();
         context.put("posts", posts);
+        context.put("postTitleSize", postTitleSize);
+        context.put("postTextSize", postTextSize);
         return Templates.render(templateName, context);
     }
 
@@ -47,6 +58,10 @@ public class News {
     String newsPost(@RequestBody HashMap<String, String> json) {
         String title = json.get("title");
         String text = json.get("text");
+        if (title.isBlank())
+            return "blank title";
+        if (text.isBlank())
+            return "blank text";
         return Post.create(title, text);
     }
 

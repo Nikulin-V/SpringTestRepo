@@ -6,6 +6,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import webserver.models.Setting;
 
 import javax.sql.DataSource;
 import java.text.SimpleDateFormat;
@@ -41,6 +42,10 @@ public class SQLManager {
                 description TEXT(128)
             )
             """);
+        if (Setting.read("Размер заголовка поста") == null)
+            Setting.create("Размер заголовка поста", "24", "Размер заголовка поста в px");
+        if (Setting.read("Размер текста поста") == null)
+            Setting.create("Размер текста поста", "14", "Размер текста поста в px");
     }
 
     public void createPostsTable() {

@@ -17,9 +17,9 @@
             {% for post in posts %}
                 <div class="card border-info mb-3" id="{{ post.id }}">
                     <div class="card-body">
-                        <h5 class="card-title" id="{{ post.id }}-title">{{ post.title }}</h5>
+                        <h5 class="card-title" id="{{ post.id }}-title" style="font-size: {{ postTitleSize }}">{{ post.title }}</h5>
                         <hr class="w-50 mx-auto">
-                        <p class="card-text" id="{{ post.id }}-text">{{ post.text }}</p>
+                        <p class="card-text" id="{{ post.id }}-text" style="font-size: {{ postTextSize }}">{{ post.text }}</p>
                         <div><p class="small text-secondary">{{ post.createdAt }}</p></div>
                         <button class="text-info btn btn-outline-info btn-edit">
                             Изменить
@@ -58,5 +58,9 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        postTitleSize = "{{ postTitleSize }}"
+        postTextSize = "{{ postTextSize }}"
+    </script>
     <script src="js/news.js" type="text/javascript"></script>
 {% endblock %}
