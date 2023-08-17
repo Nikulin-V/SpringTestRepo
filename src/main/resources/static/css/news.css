@@ -1,0 +1,12 @@
+.btn-create {
+    position: absolute;
+    right: 5%;
+}
+
+img.uploaded-image {
+    max-height: 400px;
+}
+
+#uploadedImagesCarousel {
+    background-color: darkgrey;
+}

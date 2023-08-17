@@ -5,62 +5,106 @@
 {% endblock %}
 
 {% block content %}
-    <div class="w-100 d-inline-flex mt-5 justify-content-center">
-        <h3 class="h3 text-info text-center">Новости</h3>
-        <button class="btn btn-info btn-create text-white" style="position: absolute; right: 5%">Создать пост</button>
-    </div>
+<div class="w-100 d-inline-flex mt-5 justify-content-center">
+    <h3 class="h3 text-info text-center">Новости</h3>
+    <button class="btn btn-info btn-create text-white">Создать пост</button>
+</div>
 
-    <hr class="w-75 mx-auto">
-    <div class="center-div border-0 p-3 mt-3 mx-auto text-center w-75" id="news">
-        {% autoescape %}
-        {% if posts %}
-            {% for post in posts %}
-                <div class="card border-info mb-3" id="{{ post.id }}">
-                    <div class="card-body">
-                        <h5 class="card-title" id="{{ post.id }}-title" style="font-size: {{ postTitleSize }}">{{ post.title }}</h5>
-                        <hr class="w-50 mx-auto">
-                        <p class="card-text" id="{{ post.id }}-text" style="font-size: {{ postTextSize }}">{{ post.text }}</p>
-                        <div><p class="small text-secondary">{{ post.createdAt }}</p></div>
-                        <button class="text-info btn btn-outline-info btn-edit">
-                            Изменить
-                        </button>
-                        <button class="text-danger btn btn-outline-danger btn-delete">❌</button>
+<hr class="w-75 mx-auto">
+<div class="center-div border-0 p-3 mt-3 mx-auto text-center w-75" id="news">
+    {% autoescape %}
+    {% if posts %}
+        {% for post in posts %}
+            <div class="card border-info mb-3" id="{{ post.id }}">
+                <div class="card-body">
+                    <h5 class="card-title" id="{{ post.id }}-title"
+                        style="font-size: {{ postTitleSize }}">{{ post.title }}</h5>
+                    <hr class="w-50 mx-auto">
+                    <p class="card-text" id="{{ post.id }}-text"
+                       style="font-size: {{ postTextSize }}">{{ post.text }}</p>
+                    <div id="{{ post.id }}-images">
+                        {% if post.getImagesNames().size() > 1 %}
+                            <div class="carousel-{{ post.id }} carousel slide my-3" data-bs-ride="carousel"
+                                 data-bs-keyboard="true" data-bs-interval="3000">
+                                <ol class="carousel-indicators">
+                                    {% for imageName in post.getImagesNames() %}
+                                        <li data-bs-target="#carousel-{{ post.id }}"
+                                            data-bs-slide-to="{{ loop.index0 }}"
+                                                {% if loop.first %} class="active" {% endif %}>
+                                        </li>
+                                    {% endfor %}
+                                </ol>
+                                <div class="carousel-inner">
+                                    {% for imageName in post.getImagesNames() %}
+                                        <div class="carousel-item {% if loop.first %} active {% endif %}"
+                                             id="image-{{ loop.index0 }}">
+                                            <img src="/images/{{ imageName }}"
+                                                 class="img-fluid img-thumbnail rounded uploaded-image mx-auto d-block"
+                                                 alt="Image {{ loop.index }}">
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <img src="/images/{{ post.getImagesNames()[0] }}"
+                                 class="img-fluid img-thumbnail rounded uploaded-image my-3 mx-auto d-block"
+                                 alt="Image {{ loop.index }}">
+                        {% endif %}
                     </div>
+                    <div><p class="small text-secondary">{{ post.createdAt }}</p></div>
+                    <button class="text-info btn btn-outline-info btn-edit">
+                        Изменить
+                    </button>
+                    <button class="text-danger btn btn-outline-danger btn-delete">❌</button>
                 </div>
-            {% endfor %}
-        {% else %}
-            <p class="h5 text-info text-center no-news">Новостей нет</p>
-        {% endif %}
-        {% endautoescape %}
-    </div>
-    <div class="modal fade" id="postForm" tabindex="-1" role="dialog" aria-hidden="true" data-toggle="modal" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="postFormTitle"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="title" class="col-form-label">Заголовок:</label>
-                            <input type="text" class="form-control" id="title">
-                        </div>
-                        <div class="form-group">
-                            <label for="text" class="col-form-label">Текст:</label>
-                            <textarea class="form-control" id="text"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-info" id="postFormButton"></button>
-                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="h5 text-info text-center no-news">Новостей нет</p>
+    {% endif %}
+    {% endautoescape %}
+</div>
+<div class="modal fade" id="postFormPopup" tabindex="-1" role="dialog" aria-hidden="true" data-toggle="modal"
+     data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0" id="postFormTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="postForm">
+                    <div class="form-group">
+                        <label for="title" class="col-form-label">Заголовок:</label>
+                        <input type="text" class="form-control" id="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="text" class="col-form-label">Текст:</label>
+                        <textarea class="form-control" id="text"></textarea>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label class="form-label" for="image">Изображения:</label>
+                        <input type="file" multiple class="form-control" id="image">
+                        <div id="uploaded-images"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="postForm" class="btn btn-info" id="postFormButton"></button>
             </div>
         </div>
     </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
     <script type="text/javascript">
         postTitleSize = "{{ postTitleSize }}"
         postTextSize = "{{ postTextSize }}"
     </script>
-    <script src="js/news.js" type="text/javascript"></script>
+    <script src="/js/news.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/css/news.css">
 {% endblock %}
