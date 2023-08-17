@@ -34,3 +34,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Dev files ###
+*.db
+*.sqlite
+!**/src/main/resources/public/

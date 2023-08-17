@@ -15,3 +15,7 @@ body {
 .form-title {
     margin-top: 15%;
 }
+
+.form-button {
+    border-top: 1px solid #dee2e6;
+}

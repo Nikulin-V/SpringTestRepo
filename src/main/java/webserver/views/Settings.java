@@ -1,45 +1,27 @@
 package webserver.views;
 
 import com.google.common.collect.Maps;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import webserver.SQLManager;
 import webserver.Templates;
 import webserver.models.Setting;
+import webserver.models.repos.SettingsRepo;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/settings")
 public class Settings {
     private final static String templateName = "settings";
+    @Autowired
+    SettingsRepo settingsRepo;
 
     @GetMapping
-    String settings() {
-        ArrayList<Setting> settings = new ArrayList<>();
-        
-        String query = "SELECT * FROM settings";
-
-        try (Connection connection = SQLManager.dataSource().getConnection()) {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-            while (rs.next()) {
-                int i = 0;
-                Setting setting = new Setting();
-                setting.setName(rs.getString(++i));
-                setting.setValue(rs.getString(++i));
-                setting.setDescription(rs.getString(++i));
-                settings.add(setting);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+    String settingsRead() {
+        setDefaultSettings();
+        Iterable<Setting> settings = settingsRepo.findAll();
         Map<String, Object> context = Maps.newHashMap();
         context.put("settings", settings);
         return Templates.render(templateName, context);
@@ -49,31 +31,44 @@ public class Settings {
     String settingsUpdate(@RequestParam HashMap<String, String> settings) {
         for (String settingName: settings.keySet()) {
             String settingValue = settings.get(settingName);
-            Setting setting = Setting.read(settingName);
-            setting.setValue(settingValue);
-            Setting.update(setting);
-        }
-        return settings();
-    }
-
-    @PutMapping
-    String settingsCreate(@RequestParam HashMap<String, String> settingFields) {
-        Setting setting = new Setting();
-        for (String settingField: settingFields.keySet()) {
-            String value = settingFields.get(settingField);
-            switch (settingField) {
-                case "name" -> setting.setName(value);
-                case "value" -> setting.setValue(value);
-                case "description" -> setting.setDescription(value);
+            Optional<Setting> settingOptional = settingsRepo.findById(settingName);
+            if (settingOptional.isPresent()) {
+                Setting setting = settingOptional.get();
+                setting.setValue(settingValue);
+                settingsRepo.save(setting);
             }
         }
-        Setting.create(setting);
-        return settings();
+        return settingsRead();
     }
+
+//    @PostMapping
+//    String settingsCreate(@RequestParam HashMap<String, String> settingFields) {
+//        Setting setting = new Setting();
+//        for (String settingField: settingFields.keySet()) {
+//            String value = settingFields.get(settingField);
+//            switch (settingField) {
+//                case "name" -> setting.setName(value);
+//                case "value" -> setting.setValue(value);
+//                case "description" -> setting.setDescription(value);
+//            }
+//        }
+//        settingsRepo.save(setting);
+//        return settings();
+//    }
 
     @DeleteMapping
     String settingsDelete(@RequestParam String settingName) {
-        Setting.delete(settingName);
-        return settings();
+        Optional<Setting> settingOptional = settingsRepo.findById(settingName);
+        if (settingOptional.isEmpty())
+            return null;
+        settingsRepo.delete(settingOptional.get());
+        return "success";
+    }
+
+    private void setDefaultSettings() {
+        if (settingsRepo.findById("Размер заголовка поста").isEmpty())
+            settingsRepo.create("Размер заголовка поста", "24", "Размер заголовка поста в px");
+        if (settingsRepo.findById("Размер текста поста").isEmpty())
+            settingsRepo.create("Размер текста поста", "14", "Размер текста поста в px");
     }
 }

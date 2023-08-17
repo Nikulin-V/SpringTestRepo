@@ -10,7 +10,6 @@ public class WebServer {
     public static final String resourcesFolder = "/src/main/java/resources/";
 
     public static void main(String[] args) {
-        new SQLManager();
         SpringApplication.run(WebServer.class, args);
     }
 }
