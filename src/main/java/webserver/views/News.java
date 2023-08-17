@@ -27,6 +27,27 @@ public class News {
     @Autowired
     private ImagesRepo imagesRepo;
 
+    static class BlankPostTitleException extends Exception {
+        @Override
+        public String getMessage() {
+            return "Заголовок поста не может быть пустым";
+        }
+    }
+
+    static class BlankPostTextException extends Exception {
+        @Override
+        public String getMessage() {
+            return "Текст поста не может быть пустым";
+        }
+    }
+
+    static class PostNotFoundException extends Exception {
+        @Override
+        public String getMessage() {
+            return "Пост не найден";
+        }
+    }
+    
     @GetMapping
     String news() {
         Iterable<Post> posts = postsRepo.findAll(Sort.by("createdAt").descending());
