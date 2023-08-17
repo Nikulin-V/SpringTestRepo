@@ -2,6 +2,7 @@ package webserver.views;
 
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import webserver.Templates;
 import webserver.models.Image;
@@ -28,7 +29,7 @@ public class News {
 
     @GetMapping
     String news() {
-        Iterable<Post> posts = postsRepo.findAll();
+        Iterable<Post> posts = postsRepo.findAll(Sort.by("createdAt").descending());
 
         String postTitleSize = "24px";
         if (settingsRepo.findById("Размер заголовка поста").isPresent())
@@ -52,10 +53,8 @@ public class News {
         //noinspection unchecked
         List<String> imagesNames = (List<String>) json.get("images");
 
-        if (title.isBlank())
-            return "blank title";
-        if (text.isBlank())
-            return "blank text";
+        if (title.isBlank()) return new BlankPostTitleException().getMessage();
+        if (text.isBlank()) return new BlankPostTextException().getMessage();
 
         post.setTitle(title);
         post.setText(text);
@@ -86,10 +85,8 @@ public class News {
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
 
-            if (title.isBlank())
-                return "blank title";
-            if (text.isBlank())
-                return "blank text";
+            if (title.isBlank()) return new BlankPostTitleException().getMessage();
+            if (text.isBlank()) return new BlankPostTextException().getMessage();
 
             post.setTitle(title);
             post.setText(text);
@@ -108,7 +105,7 @@ public class News {
                 }
             }
             return post.getId();
-        } else return "not found";
+        } else return new PostNotFoundException().getMessage();
     }
 
     @DeleteMapping
@@ -116,7 +113,7 @@ public class News {
         String id = json.get("id");
         if (postsRepo.findById(id).isPresent()) {
             postsRepo.deleteById(id);
-            return "success";
-        } else return "id not found";
+            return "Пост успешно удалён";
+        } else return new PostNotFoundException().getMessage();
     }
 }

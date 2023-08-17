@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
 @Entity
 @Table(name = "posts")
 public class Post implements Serializable {
@@ -56,7 +55,17 @@ public class Post implements Serializable {
         this.title = title;
     }
 
+    @SuppressWarnings("unused")
+    public String getText() {
+        return text;
+    }
+
     public void setText(String text) {
         this.text = text;
+    }
+
+    @SuppressWarnings("unused")
+    public String getCreatedAt() {
+        return createdAt;
     }
 }

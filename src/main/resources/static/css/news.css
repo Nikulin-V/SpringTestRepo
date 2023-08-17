@@ -10,3 +10,10 @@ img.uploaded-image {
 #uploadedImagesCarousel {
     background-color: darkgrey;
 }
+
+.carousel {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}

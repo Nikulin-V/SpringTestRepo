@@ -1,5 +1,6 @@
 package webserver.models.repos;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import webserver.models.Post;
@@ -14,4 +15,6 @@ public interface PostsRepo extends CrudRepository<Post, String> {
         save(post);
         return post.getId();
     }
+
+    Iterable<Post> findAll(Sort sort);
 }
