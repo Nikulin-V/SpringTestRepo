@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import webserver.StaticResourcesConfiguration;
 import webserver.models.Image;
 import webserver.models.repos.ImagesRepo;
 
@@ -19,7 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = "/images-upload")
 public class ImageUpload {
-    private static final String uploadedImagesDir = "src/main/resources/public/images/";
+    private static final String uploadedImagesDir = StaticResourcesConfiguration.publicFolderPath + "images\\";
     @Autowired
     private ImagesRepo imagesRepo;
 

@@ -38,7 +38,7 @@
                                     {% for imageName in post.getImagesNames() %}
                                         <div class="carousel-item {% if loop.first %} active {% endif %}"
                                              id="image-{{ loop.index0 }}">
-                                            <img src="/images/{{ imageName }}"
+                                            <img src="/public/images/{{ imageName }}"
                                                  class="img-fluid img-thumbnail rounded uploaded-image mx-auto d-block"
                                                  alt="Image {{ loop.index }}">
                                         </div>
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                         {% else %}
-                            <img src="/images/{{ post.getImagesNames()[0] }}"
+                            <img src="/public/images/{{ post.getImagesNames()[0] }}"
                                  class="img-fluid img-thumbnail rounded uploaded-image my-3 mx-auto d-block"
                                  alt="Image {{ loop.index }}">
                         {% endif %}
