@@ -19,11 +19,8 @@ public class Post implements Serializable {
     @CreationTimestamp
     private String createdAt;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
-
-    public Post() {
-    }
 
     public void addImage(Image image) {
         images.add(image);
@@ -35,12 +32,8 @@ public class Post implements Serializable {
     }
 
     @SuppressWarnings("unused")
-    public List<String> getImagesNames() {
-        List<String> imagesNames = new ArrayList<>();
-        for (Image image : images) {
-            imagesNames.add(image.getName());
-        }
-        return imagesNames;
+    public List<Image> getImages() {
+        return images;
     }
 
     public String getId() {

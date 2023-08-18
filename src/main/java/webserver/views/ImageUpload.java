@@ -55,4 +55,6 @@ public class ImageUpload {
         ImageIO.write(bufferedImage, format, imageFile);
         return name;
     }
+
+    // TODO: 18.08.2023 Deleting unused images
 }
