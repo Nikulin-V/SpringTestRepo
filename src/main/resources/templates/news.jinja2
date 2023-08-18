@@ -21,11 +21,11 @@
                     <hr class="w-50 mx-auto">
                     <p class="card-text" id="post-{{ post.id }}-text" style="font-size: {{ postTextSize }}">{{ post.text }}</p>
                     <div id="post-{{ post.id }}-images">
-                        {% if post.getImagesNames().size() > 1 %}
+                        {% if post.images.size() > 1 %}
                             <div id="post-{{ post.id }}-carousel" class="carousel slide my-3" data-bs-ride="carousel"
                                  data-bs-keyboard="true" data-bs-interval="3000">
                                 <ol class="carousel-indicators">
-                                    {% for imageName in post.getImagesNames() %}
+                                    {% for image in post.images %}
                                         <li data-bs-target="#post-{{ post.id }}-carousel"
                                             data-bs-slide-to="{{ loop.index0 }}"
                                                 {% if loop.first %} class="active" {% endif %}>
@@ -33,10 +33,10 @@
                                     {% endfor %}
                                 </ol>
                                 <div class="carousel-inner">
-                                    {% for imageName in post.getImagesNames() %}
+                                    {% for image in post.images %}
                                         <div class="carousel-item {% if loop.first %} active {% endif %}"
                                              id="image-{{ loop.index0 }}">
-                                            <img src="/public/images/{{ imageName }}"
+                                            <img src="/public/images/{{ image.name }}"
                                                  class="img-fluid img-thumbnail rounded uploaded-image mx-auto d-block"
                                                  alt="Image {{ loop.index }}">
                                         </div>
@@ -52,7 +52,7 @@
                                 </a>
                             </div>
                         {% else %}
-                            <img src="/public/images/{{ post.getImagesNames()[0] }}"
+                            <img src="/public/images/{{ post.images[0].name }}"
                                  class="img-fluid img-thumbnail rounded uploaded-image my-3 mx-auto d-block"
                                  alt="Image {{ loop.index }}">
                         {% endif %}

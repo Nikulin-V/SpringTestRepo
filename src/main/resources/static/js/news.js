@@ -162,7 +162,7 @@ function createPost() {
                         <div class="card-body">
                             <h5 class="card-title" id="post-${postId}-title" style="font-size: ${postTitleSize}">${titleInput.val()}</h5>
                             <hr class="w-50 mx-auto">
-                            <p class="card-text" id="post-${postId}-text" style="font-size: ${postTitleSize}">${textInput.val()}</p>
+                            <p class="card-text" id="post-${postId}-text" style="font-size: ${postTextSize}">${textInput.val()}</p>
                             <div id="post-${postId}-images">
                                 ${generateImagesBlock(postId, imageInput.prop("files"), false, 3000)}
                             </div>

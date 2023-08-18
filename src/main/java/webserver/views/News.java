@@ -91,6 +91,7 @@ public class News {
                 imagesRepo.save(image);
             }
         }
+        postsRepo.save(post);
         return post.getId();
     }
 
